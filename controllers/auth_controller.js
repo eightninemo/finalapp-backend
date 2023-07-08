@@ -10,7 +10,7 @@ const lid = uuidv4();
 const register = (req, res) => {
     var email = req.body.email
     var type = req.body.type
-    var locationId = lid
+    var locationName = req.body.location
     var userId = id
     bcrypt.hash(req.body.password, 10, function(err, hashedPass){
         if(err){
@@ -28,7 +28,7 @@ const register = (req, res) => {
             location: req.body.location
         })
         let location = new Location({
-            locationId : locationId,
+            locationId : lid,
             location_name : req.body.location,   
         })
         User.findOne({email:email}).then(user => {
@@ -57,14 +57,14 @@ const register = (req, res) => {
         })
     }) 
     if(type == 'doctor'){
-        Location.updateOne(location._id, {$push:{doctors: userModel}})
+        Location.findOneAndUpdate({location_name: locationName}, {$push:{doctors: userModel}})
         .then(response => {
             console.log(response)
         }).catch(error => {
             console.log(error)
         }) 
        }else if(type == 'patient'){
-       Location.updateOne(location._id, {$push:{patients: userModel}})
+       Location.findOneAndUpdate({location_name: locationName}, {$push:{patients: userModel}})
        .then(response => {
          console.log(response)
        }).catch(error => {
