@@ -2,6 +2,9 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const userSchema = new  Schema({
+    userId: {
+        type: String
+    },
     name: {
         type: String
     },
@@ -20,7 +23,7 @@ const userSchema = new  Schema({
     location: {
         type: String
     },
-    
+
 }, {timestamps: true})
 
 const User = mongoose.model('User', userSchema)

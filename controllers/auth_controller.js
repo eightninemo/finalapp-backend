@@ -1,12 +1,16 @@
 const User = require('../models/user_model')
 const LocationDoctor = require('../models/location_doctor_model')
+const LocationPatient = require('../models/location_patient_model')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const { v4: uuidv4 } = require('uuid');
+
+const id = uuidv4();
 
 const register = (req, res) => {
     var email = req.body.email
     var type = req.body.type
-    var userId = req.body.userId
+    var userId = id
     bcrypt.hash(req.body.password, 10, function(err, hashedPass){
         if(err){
             res.json({
@@ -14,6 +18,7 @@ const register = (req, res) => {
             })
         }
         let userModel = new User({
+            userId: userId,
             name: req.body.name,
             email: req.body.email,   
             phone: req.body.phone,
@@ -26,7 +31,7 @@ const register = (req, res) => {
             name : req.body.name,
             location : req.body.name, 
         })
-        let patientLocation = new LocationDoctor({
+        let patientLocation = new LocationPatient({
             userId : userId,
             name : req.body.name,
             location : req.body.name, 
