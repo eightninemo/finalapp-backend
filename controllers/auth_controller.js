@@ -57,14 +57,14 @@ const register = (req, res) => {
         })
     }) 
     if(type == 'doctor'){
-        Location.findByIdAndUpdate(location.id, {$push:{doctors: userModel}})
+        Location.updateOne(location._id, {$push:{doctors: userModel}})
         .then(response => {
             console.log(response)
         }).catch(error => {
             console.log(error)
         }) 
        }else if(type == 'patient'){
-       Location.updateOne(location.id, {$push:{patients: userModel}})
+       Location.updateOne(location._id, {$push:{patients: userModel}})
        .then(response => {
          console.log(response)
        }).catch(error => {
