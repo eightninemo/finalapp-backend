@@ -15,7 +15,7 @@ const all = (req, res) => {
     })
 }
 
-// get cafetaria by ID
+// get location by name
 const one = (req, res) => {
     const locationName = req.params.locationName
     Location.findOne({location_name:locationName}).then(location => {

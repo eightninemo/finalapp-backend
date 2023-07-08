@@ -92,7 +92,7 @@ const register = (req, res) => {
         })
         
     }).catch(error => {
-        res.json({
+        res.status(500).json({
         message: 'An error occured: ' + error
                     })
                 })
@@ -120,7 +120,7 @@ const login = (req, res) => {
                         data: user
                        })
                     }else{
-                        res.status(400).json({
+                        res.status(500).json({
                             status: false,
                             message: 'Invalid Password',
                             
