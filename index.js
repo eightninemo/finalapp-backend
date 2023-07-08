@@ -6,6 +6,7 @@ const bodyParser = require('body-parser')
 const app = express()
 
 const AuthRoute = require('./routes/auth_route')
+const LocationRoute = require('./routes/location_route')
 
 
 // change connection string
@@ -38,3 +39,4 @@ app.listen(PORT, () => {
 
 // set route with url
 app.use('/user', AuthRoute)
+app.use('/location', LocationRoute)
