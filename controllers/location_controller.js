@@ -17,20 +17,20 @@ const all = (req, res) => {
 // get cafetaria by ID
 const one = (req, res) => {
     const locationName = req.params.locationName
-    Location.findOne({location_name: locationName}).then(document => {
-        if (document) {
+    Location.findOne({location_name:locationName}).then(location => {
+        if (location) {
             res.status(200).json({
                 data: document
             })
             console.log('Document:', document);
            
         }
-    //     else{
-    //         res.status(404).json({
-    //             message: 'Location not found.'
-    //             })
-    //           console.log('Document not found.');
-    // }
+        else{
+            res.status(404).json({
+                message: 'Location not found.'
+                })
+              console.log('Document not found.');
+    }
       })
       .catch(error => {
         res.status(500).json({
