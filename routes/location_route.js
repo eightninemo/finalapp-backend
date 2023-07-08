@@ -5,7 +5,7 @@ const LocationController = require('../controllers/location_controller')
 
 
 router.get('/all', LocationController.all)
-router.get('/show/:locationId', LocationController.one)
+router.get('/show/:locationName', LocationController.one)
 
 
 
