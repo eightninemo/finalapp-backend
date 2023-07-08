@@ -1,11 +1,12 @@
 const User = require('../models/user_model')
-const Location = require('../models/location_model')
+const LocationDoctor = require('../models/location_doctor_model')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
 const register = (req, res) => {
     var email = req.body.email
     var type = req.body.type
+    var userId = req.body.userId
     bcrypt.hash(req.body.password, 10, function(err, hashedPass){
         if(err){
             res.json({
@@ -20,9 +21,15 @@ const register = (req, res) => {
             password: hashedPass,
             location: req.body.location
         })
-        let userLocation = new User({
-            name: req.body.name,
-            location: req.body.location
+        let doctorLocation = new LocationDoctor({
+            userId : userId,
+            name : req.body.name,
+            location : req.body.name, 
+        })
+        let patientLocation = new LocationDoctor({
+            userId : userId,
+            name : req.body.name,
+            location : req.body.name, 
         })
         User.findOne({email:email}).then(user => {
             if(user){
@@ -37,7 +44,7 @@ const register = (req, res) => {
               data: response
         })
         if(type == 'doctor'){
-            Location.save()
+            doctorLocation.save()
             .then(response => {
                 console.log(response)
                 
@@ -45,7 +52,7 @@ const register = (req, res) => {
                 console.log(error)
             }) 
         }else if(type == 'patient'){
-            Location.updateOne({$push:{patients: userLocation}})
+            patientLocation.save()
             .then(response => {
                 console.log(response)
                 
