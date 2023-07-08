@@ -5,6 +5,7 @@ const all = (req, res) => {
     Location.find()
     .then(response => {
         res.status(200).json({
+            status: true,
             data: response
         })
     }).catch(error => {
@@ -20,6 +21,7 @@ const one = (req, res) => {
     Location.findOne({location_name:locationName}).then(location => {
         if (location) {
             res.status(200).json({
+                status: true,
                 data: location
             })
             console.log('Document:', location);

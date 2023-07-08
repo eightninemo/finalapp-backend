@@ -35,12 +35,14 @@ const register = (req, res) => {
         User.findOne({email:email}).then(user => {
             if(user){
             res.status(404).json({
+                status: false,
                 message: 'user exists'
             })
         }else{
         userModel.save()
         .then(response => {
         res.json({
+            status: true,
               message: 'User Added Successfully',
               data: response
         })
@@ -113,11 +115,13 @@ const login = (req, res) => {
                     }
                 if(result){
                        res.status(200).json({
+                        status: true,
                         message: 'Login Successful',
                         data: user
                        })
                     }else{
-                        res.status(200).json({
+                        res.status(400).json({
+                            status: false,
                             message: 'Invalid Password',
                             
                         })
