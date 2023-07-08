@@ -20,9 +20,9 @@ const one = (req, res) => {
     Location.findOne({location_name:locationName}).then(location => {
         if (location) {
             res.status(200).json({
-                data: document
+                data: location
             })
-            console.log('Document:', document);
+            console.log('Document:', location);
            
         }
         else{
