@@ -44,33 +44,33 @@ const register = (req, res) => {
               data: response
         })
         location.save().then(response => {
-            console.log(response)
-            if(type == 'doctor'){
-                Location.findByIdAndUpdate(location.id, {$push:{doctors: userModel}})
-                .then(response => {
-                    console.log(response)
-                }).catch(error => {
-                    console.log(error)
-                }) 
-               }else if(type == 'patient'){
-               Location.updateOne(location.id, {$push:{patients: userModel}})
-               .then(response => {
-                 console.log(response)
-               }).catch(error => {
-                 console.log(error)
-               }) 
-               }
+            console.log(response)  
         }).catch(error => {
             console.log(error)
         })
     }).catch(error => {
-            res.json({
-                message: 'An error occured: ' + error
-            })
+        res.json({
+        message: 'An error occured: ' + error
+                    })
+                })
+            }
         })
-        }
-    })
-    })   
+    }) 
+    if(type == 'doctor'){
+        Location.findByIdAndUpdate(location.id, {$push:{doctors: userModel}})
+        .then(response => {
+            console.log(response)
+        }).catch(error => {
+            console.log(error)
+        }) 
+       }else if(type == 'patient'){
+       Location.updateOne(location.id, {$push:{patients: userModel}})
+       .then(response => {
+         console.log(response)
+       }).catch(error => {
+         console.log(error)
+       }) 
+       }
 }
 
 const login = (req, res) => {
