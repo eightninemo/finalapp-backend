@@ -43,26 +43,51 @@ const register = (req, res) => {
               message: 'User Added Successfully',
               data: response
         })
-        location.save().then(response => {
-            console.log(response)
-            if(type == 'doctor'){
-                Location.findOneAndUpdate({location_name: locationName}, {$push:{doctors: userModel}})
-                .then(response => {
-                    console.log(response)
+        Location.findOne({location_name: locationName}).then(location =>{
+            if(user){
+                if(type == 'doctor'){
+                    Location.findOneAndUpdate({location_name: locationName}, 
+                        {$push:{doctors: userModel}})
+                    .then(response => {
+                        console.log(response)
+                    }).catch(error => {
+                        console.log(error)
+                    }) 
+                   }else if(type == 'patient'){
+                   Location.findOneAndUpdate({location_name: locationName}, 
+                    {$push:{patients: userModel}})
+                   .then(response => {
+                     console.log(response)
+                   }).catch(error => {
+                     console.log(error)
+                   }) 
+                   }
+            }else{
+                location.save().then(response => {
+                console.log(response)
+                if(type == 'doctor'){
+                    Location.findOneAndUpdate({location_name: locationName}, 
+                        {$push:{doctors: userModel}})
+                    .then(response => {
+                        console.log(response)
+                    }).catch(error => {
+                        console.log(error)
+                    }) 
+                   }else if(type == 'patient'){
+                   Location.findOneAndUpdate({location_name: locationName}, 
+                    {$push:{patients: userModel}})
+                   .then(response => {
+                     console.log(response)
+                   }).catch(error => {
+                     console.log(error)
+                   }) 
+                   }
                 }).catch(error => {
-                    console.log(error)
-                }) 
-               }else if(type == 'patient'){
-               Location.findOneAndUpdate({location_name: locationName}, {$push:{patients: userModel}})
-               .then(response => {
-                 console.log(response)
-               }).catch(error => {
-                 console.log(error)
-               }) 
-               }
-        }).catch(error => {
-            console.log(error)
+                console.log(error)
+                })
+            }
         })
+        
     }).catch(error => {
         res.json({
         message: 'An error occured: ' + error
