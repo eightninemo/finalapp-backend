@@ -45,24 +45,24 @@ const register = (req, res) => {
         })
         location.save().then(response => {
             console.log(response)
+            if(type == 'doctor'){
+                Location.findByIdAndUpdate(location.id, {$push:{doctors: userModel}})
+                .then(response => {
+                    console.log(response)
+                }).catch(error => {
+                    console.log(error)
+                }) 
+               }else if(type == 'patient'){
+               Location.updateOne(location.id, {$push:{patients: userModel}})
+               .then(response => {
+                 console.log(response)
+               }).catch(error => {
+                 console.log(error)
+               }) 
+               }
         }).catch(error => {
             console.log(error)
         })
-        if(type == 'doctor'){
-            Location.updateOne(locationId, {$push:{doctors: userModel}})
-            .then(response => {
-                console.log(response)
-            }).catch(error => {
-                console.log(error)
-            }) 
-           }else if(type == 'patient'){
-           Location.updateOne(locationId, {$push:{patients: userModel}})
-           .then(response => {
-             console.log(response)
-           }).catch(error => {
-             console.log(error)
-           }) 
-           }
     }).catch(error => {
             res.json({
                 message: 'An error occured: ' + error
