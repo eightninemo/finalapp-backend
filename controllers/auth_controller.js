@@ -44,7 +44,22 @@ const register = (req, res) => {
               data: response
         })
         location.save().then(response => {
-            console.log(response)  
+            console.log(response)
+            if(type == 'doctor'){
+                Location.findOneAndUpdate({location_name: locationName}, {$push:{doctors: userModel}})
+                .then(response => {
+                    console.log(response)
+                }).catch(error => {
+                    console.log(error)
+                }) 
+               }else if(type == 'patient'){
+               Location.findOneAndUpdate({location_name: locationName}, {$push:{patients: userModel}})
+               .then(response => {
+                 console.log(response)
+               }).catch(error => {
+                 console.log(error)
+               }) 
+               }
         }).catch(error => {
             console.log(error)
         })
@@ -56,21 +71,6 @@ const register = (req, res) => {
             }
         })
     }) 
-    if(type == 'doctor'){
-        Location.findOneAndUpdate({location_name: locationName}, {$push:{doctors: userModel}})
-        .then(response => {
-            console.log(response)
-        }).catch(error => {
-            console.log(error)
-        }) 
-       }else if(type == 'patient'){
-       Location.findOneAndUpdate({location_name: locationName}, {$push:{patients: userModel}})
-       .then(response => {
-         console.log(response)
-       }).catch(error => {
-         console.log(error)
-       }) 
-       }
 }
 
 const login = (req, res) => {
