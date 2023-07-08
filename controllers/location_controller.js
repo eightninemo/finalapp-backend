@@ -17,21 +17,25 @@ const all = (req, res) => {
 // get cafetaria by ID
 const one = (req, res) => {
     const locationName = req.params.locationName
-    Location.findOne({location_name: locationName}, function(err,response){
-        if (err) {
-            res.status(200).json({
-                message: err
+    Location.findOne({location_name: locationName}).then(document => {
+        if (!document) {
+            res.status(404).json({
+            message: 'Location not found.'
             })
-          }
-          if (!response) {
-            res.status(200).json({
-                message: 'Location not found.'
-            })
-          }
+          console.log('Document not found.');
+          return;
+        }
         res.status(200).json({
-            data: response
+            data: document
         })
-    })
+        console.log('Document:', document);
+      })
+      .catch(error => {
+        res.status(500).json({
+            message: 'Error finding Location'
+        })
+        console.error('Error finding document:', error);
+      })
 }
 
 module.exports = {
