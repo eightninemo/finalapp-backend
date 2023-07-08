@@ -11,8 +11,12 @@ const register = (req, res) => {
             })
         }
         let userModel = new User({
+            name: req.body.name,
             email: req.body.email,   
-            password: hashedPass
+            phone: req.body.phone,
+            type: req.body.type,
+            password: hashedPass,
+            location: req.body.location
         })
         User.findOne({email:email}).then(user => {
             if(user){
