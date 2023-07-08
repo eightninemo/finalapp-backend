@@ -27,10 +27,6 @@ const register = (req, res) => {
             password: hashedPass,
             location: req.body.location
         })
-        let location = new Location({
-            locationId : lid,
-            location_name : req.body.location,   
-        })
         User.findOne({email:email}).then(user => {
             if(user){
             res.status(404).json({
@@ -43,7 +39,12 @@ const register = (req, res) => {
               message: 'User Added Successfully',
               data: response
         })
+       
         Location.findOne({location_name: locationName}).then(location =>{
+            let location = new Location({
+                locationId : lid,
+                location_name : req.body.location,   
+            })
             if(user){
                 if(type == 'doctor'){
                     Location.findOneAndUpdate({location_name: locationName}, 
