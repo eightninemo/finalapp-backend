@@ -37,7 +37,7 @@ const register = (req, res) => {
               data: response
         })
         if(type == 'doctor'){
-            Location.updateOne({$push:{doctors: userLocation}})
+            Location.save()
             .then(response => {
                 console.log(response)
                 
