@@ -12,6 +12,7 @@ const register = (req, res) => {
     var type = req.body.type
     var locationName = req.body.location
     var userId = id
+    
     bcrypt.hash(req.body.password, 10, function(err, hashedPass){
         if(err){
             res.json({
@@ -27,6 +28,10 @@ const register = (req, res) => {
             password: hashedPass,
             location: req.body.location
         })
+        let locationModel = new Location({
+            locationId : lid,
+            location_name : req.body.location,   
+        })
         User.findOne({email:email}).then(user => {
             if(user){
             res.status(404).json({
@@ -39,13 +44,8 @@ const register = (req, res) => {
               message: 'User Added Successfully',
               data: response
         })
-       
         Location.findOne({location_name: locationName}).then(location =>{
-            let location = new Location({
-                locationId : lid,
-                location_name : req.body.location,   
-            })
-            if(user){
+            if(location){
                 if(type == 'doctor'){
                     Location.findOneAndUpdate({location_name: locationName}, 
                         {$push:{doctors: userModel}})
@@ -64,7 +64,7 @@ const register = (req, res) => {
                    }) 
                    }
             }else{
-                location.save().then(response => {
+                locationModel.save().then(response => {
                 console.log(response)
                 if(type == 'doctor'){
                     Location.findOneAndUpdate({location_name: locationName}, 
