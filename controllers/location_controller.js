@@ -17,7 +17,7 @@ const all = (req, res) => {
 // get cafetaria by ID
 const one = (req, res) => {
     const locationName = req.params.locationName
-    Location.findOne(locationName)
+    Location.findOne({location_name: locationName})
     .then(response => {
         res.status(200).json({
             data: response
