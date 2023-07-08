@@ -1,15 +1,16 @@
 const User = require('../models/user_model')
-const LocationDoctor = require('../models/location_doctor_model')
-const LocationPatient = require('../models/location_patient_model')
+const Location = require('../models/location_model')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const { v4: uuidv4 } = require('uuid');
 
 const id = uuidv4();
+const lid = uuidv4();
 
 const register = (req, res) => {
     var email = req.body.email
     var type = req.body.type
+    var locationId = lid
     var userId = id
     bcrypt.hash(req.body.password, 10, function(err, hashedPass){
         if(err){
@@ -26,15 +27,9 @@ const register = (req, res) => {
             password: hashedPass,
             location: req.body.location
         })
-        let doctorLocation = new LocationDoctor({
-            userId : userId,
-            name : req.body.name,
-            location : req.body.name, 
-        })
-        let patientLocation = new LocationPatient({
-            userId : userId,
-            name : req.body.name,
-            location : req.body.name, 
+        let location = new Location({
+            locationId : locationId,
+            location_name : req.body.location,   
         })
         User.findOne({email:email}).then(user => {
             if(user){
@@ -48,25 +43,27 @@ const register = (req, res) => {
               message: 'User Added Successfully',
               data: response
         })
+        location.save().then(response => {
+            console.log(response)
+        }).catch(error => {
+            console.log(error)
+        })
         if(type == 'doctor'){
-            doctorLocation.save()
+            Location.updateOne(locationId, {$push:{doctors: userModel}})
             .then(response => {
                 console.log(response)
-                
             }).catch(error => {
                 console.log(error)
             }) 
-        }else if(type == 'patient'){
-            patientLocation.save()
-            .then(response => {
-                console.log(response)
-                
-            }).catch(error => {
-                console.log(error)
-            }) 
-        }
-    })
-        .catch(error => {
+           }else if(type == 'patient'){
+           Location.updateOne(locationId, {$push:{patients: userModel}})
+           .then(response => {
+             console.log(response)
+           }).catch(error => {
+             console.log(error)
+           }) 
+           }
+    }).catch(error => {
             res.json({
                 message: 'An error occured: ' + error
             })
@@ -74,7 +71,7 @@ const register = (req, res) => {
         }
     })
     })   
-    }
+}
 
 const login = (req, res) => {
     var email = req.body.email
