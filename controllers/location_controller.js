@@ -18,17 +18,19 @@ const all = (req, res) => {
 const one = (req, res) => {
     const locationName = req.params.locationName
     Location.findOne({location_name: locationName}).then(document => {
-        if (!document) {
-            res.status(404).json({
-            message: 'Location not found.'
+        if (document) {
+            res.status(200).json({
+                data: document
             })
-          console.log('Document not found.');
-          return;
+            console.log('Document:', document);
+           
         }
-        res.status(200).json({
-            data: document
-        })
-        console.log('Document:', document);
+    //     else{
+    //         res.status(404).json({
+    //             message: 'Location not found.'
+    //             })
+    //           console.log('Document not found.');
+    // }
       })
       .catch(error => {
         res.status(500).json({
