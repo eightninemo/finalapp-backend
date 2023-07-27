@@ -26,6 +26,10 @@ db.on('connected', () => {
     console.log('Databases connection established.')
 })
 
+app.get('/', (req, res)=> {
+    res.send('Hello World')
+})
+
 app.use(morgan('dev'))
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())

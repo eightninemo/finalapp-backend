@@ -23,6 +23,18 @@ const userSchema = new  Schema({
     location: {
         type: String
     },
+    upcomingSchedule: {
+        type: Array,
+        default: []
+    },
+    completedSchedule: {
+        type: Array,
+        default: []
+    },
+    cancelledSchedule: {
+        type: Array,
+        default: []
+    }
 
 }, {timestamps: true})
 
