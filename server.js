@@ -7,6 +7,8 @@ const app = express()
 
 const AuthRoute = require('./routes/auth_route')
 const LocationRoute = require('./routes/location_route')
+const AppointmentRoute = require('./routes/appointment_route')
+
 
 
 // change connection string
@@ -42,5 +44,6 @@ app.listen(PORT, () => {
 })
 
 // set route with url
-app.use('/user', AuthRoute)
-app.use('/location', LocationRoute)
+app.use('/api/user', AuthRoute)
+app.use('/api/location', LocationRoute)
+app.use('/api/appointment', AppointmentRoute)

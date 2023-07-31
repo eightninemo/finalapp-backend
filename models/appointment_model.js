@@ -5,14 +5,18 @@ const appointmentSchema = new  Schema({
     appointmentId: {
         type: String
     },
-    doctor: {
+    doctorName: {
         type: String
     },
-    patient: {
+    patientName: {
         type: String
+    },
+    status: {
+        type: String,
+        default: 'upcoming'
     },
     appointmentTime: {
-        type: Date,
+        type: String,
     },  
 }, {timestamps: true})
 

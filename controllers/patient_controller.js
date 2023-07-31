@@ -1,4 +1,4 @@
-const User = require('../models/user_model')
+const Patient = require('../models/patient_model')
 const Location = require('../models/location_model')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
@@ -19,7 +19,7 @@ const register = (req, res) => {
                 error: err
             })
         }
-        let userModel = new User({
+        let userModel = new Patient({
             userId: userId,
             name: req.body.name,
             email: req.body.email,   
@@ -32,7 +32,7 @@ const register = (req, res) => {
             locationId : lid,
             location_name : req.body.location,   
         })
-        User.findOne({email:email}).then(user => {
+        Patient.findOne({email:email}).then(user => {
             if(user){
             res.status(404).json({
                 status: false,
@@ -104,12 +104,13 @@ const register = (req, res) => {
 const login = (req, res) => {
     var email = req.body.email
     var password = req.body.password
-    User.findOne({$or: [{email:email}]})
+    Patient.findOne({$or: [{email:email}]})
     .then(user => {
         if(user){
             bcrypt.compare(password, user.password, function(err, result){
                 if(err){
-                        res.json({
+                        res.status(404).json({
+                            status: false,
                             error: err
                         })
                     }

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const userSchema = new  Schema({
+const patientSchema = new  Schema({
     userId: {
         type: String
     },
@@ -31,12 +31,7 @@ const userSchema = new  Schema({
         type: Array,
         default: []
     },
-    cancelledSchedule: {
-        type: Array,
-        default: []
-    }
-
 }, {timestamps: true})
 
-const User = mongoose.model('User', userSchema)
-module.exports = User
+const Patient = mongoose.model('Patient', patientSchema)
+module.exports = Patient
