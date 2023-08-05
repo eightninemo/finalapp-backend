@@ -1,4 +1,5 @@
 const Doctor = require('../models/doctor_model')
+const User = require('../models/user_model')
 const Location = require('../models/location_model')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
@@ -19,7 +20,16 @@ const register = (req, res) => {
                 error: err
             })
         }
-        let userModel = new Doctor({
+        let userModel = new User({
+            userId: userId,
+            name: req.body.name,
+            email: req.body.email,   
+            phone: req.body.phone,
+            type: req.body.type,
+            password: hashedPass,
+            location: req.body.location
+        })
+        let doctorModel = new Doctor({
             userId: userId,
             name: req.body.name,
             email: req.body.email,   
@@ -39,13 +49,16 @@ const register = (req, res) => {
                 message: 'user exists'
             })
         }else{
-        userModel.save()
+        doctorModel.save()
         .then(response => {
         res.json({
             status: true,
               message: 'User Added Successfully',
               data: response
         })
+        userModel.save().then(response => {
+            console.log('user added.')
+        }) 
         Location.findOne({location_name: locationName}).then(location =>{
             if(location){
                 if(type == 'doctor'){
@@ -101,37 +114,7 @@ const register = (req, res) => {
     }) 
 }
 
-const login = (req, res) => {
-    var email = req.body.email
-    var password = req.body.password
-    Doctor.findOne({$or: [{email:email}]})
-    .then(user => {
-        if(user){
-            bcrypt.compare(password, user.password, function(err, result){
-                if(err){
-                        res.status(404).json({
-                            status: false,
-                            error: err
-                        })
-                    }
-                if(result){
-                       res.status(200).json({
-                        status: true,
-                        message: 'Login Successful',
-                        data: user
-                       })
-                    }else{
-                        res.status(500).json({
-                            status: false,
-                            message: 'Invalid Password',
-                            
-                        })
-                    }
-                })
-            }
-        })
-    }
 
 module.exports = {
-        register, login
+        register
      }
