@@ -4,6 +4,6 @@ const router = express.Router()
 const AppointmentController = require('../controllers/appointment_controller')
 
 router.post('/upcoming-schedule', AppointmentController.upcomingSchedule)
-router.get('/complete-schedule', AppointmentController.completedSchedule)
+router.post('/complete-schedule/:appointmentId', AppointmentController.completedSchedule)
 
 module.exports = router

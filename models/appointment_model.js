@@ -13,12 +13,8 @@ const appointmentSchema = new  Schema({
     },
     status: {
         type: String,
-        default: 'upcoming'
     },
-    appointmentTime: {
-        type: String,
-    },  
-}, {timestamps: true})
+},{timestamps: true})
 
 const Appointment = mongoose.model('Appointment', appointmentSchema)
 module.exports = Appointment

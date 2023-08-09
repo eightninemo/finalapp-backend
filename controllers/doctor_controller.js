@@ -5,8 +5,9 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const { v4: uuidv4 } = require('uuid');
 
-const id = uuidv4();
-const lid = uuidv4();
+
+var id = uuidv4();
+var lid = uuidv4();
 
 const register = (req, res) => {
     var email = req.body.email

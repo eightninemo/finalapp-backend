@@ -8,6 +8,7 @@ const UserController = require('../controllers/auth_controller')
 router.post('/patient-register', PatientController.register)
 router.post('/doctor-register', DoctorController.register)
 router.post('/user-login', UserController.login)
+router.get('/find-user/:userId', UserController.one)
 
 
 

@@ -1,64 +1,119 @@
 const Appointment = require('../models/appointment_model')
 const Patient = require('../models/patient_model')
 const Doctor = require('../models/doctor_model')
+const User = require('../models/user_model')
 const { v4: uuidv4 } = require('uuid');
 
 
-const aid = uuidv4();
 
 // create upcoming schedule
-const upcomingSchedule = (req, res) => {
-    var appointmentId = aid
-    var patientName = req.body.patientName 
-    var doctorName = req.body.doctor_name
-    let appointmentModel = Appointment({
+const upcomingSchedule = async (req, res) => {
+    var appointmentId = uuidv4();
+    var patientName = req.body.patientName;
+    var doctorName = req.body.doctorName;
+    
+    // Create and save appointment
+    let appointmentModel = new Appointment({
         appointmentId: appointmentId,
-        doctorName: req.body.doctorName,
-        patientName: req.body.patientName,
-        appointmentTime: req.body.appointmentTime,
-    })
-    console.log(appointmentModel)
-    appointmentModel.save().then(response => { 
-        Patient.updateMany({name: patientName}, 
-        {$push:{upcomingSchedule: appointmentModel}})
-        .then(response => {
-            Doctor.updateMany({name: doctorName}, 
-                {$push:{upcomingSchedule: appointmentModel}}).then(response => {
-                    console.log('added to doctor too')
-                })
-            res.status(201).json({
-                status: true,
-                message: 'Appointment Scheduled Successfully',
-            })
+        doctorName: doctorName,
+        patientName: patientName,
+        status: 'upcoming'
+    });
 
-        })
-    }).catch(error => {
-        console.log(error)
+    try {
+        await appointmentModel.save();
+        
+        // Update patient and doctor with appointment
+        await Patient.findOneAndUpdate(
+            { name: patientName },
+            { $push: { upcomingSchedule: appointmentModel } }
+        );
+        
+        await Doctor.findOneAndUpdate(
+            { name: doctorName },
+            { $push: { upcomingSchedule: appointmentModel } }
+        );
+        
+        await User.findOneAndUpdate(
+            { name: patientName },
+            { $push: { upcomingSchedule: appointmentModel } }
+        );
+
+        await User.findOneAndUpdate(
+            { name: doctorName },
+            { $push: { upcomingSchedule: appointmentModel } }
+        );
+
+        res.status(201).json({
+            status: true,
+            message: 'Appointment scheduled successfully',
+            data: appointmentModel
+        });
+    } catch (error) {
+        console.log('Error scheduling appointment:', error);
         res.status(500).json({
             status: false,
-            message: 'Error Scheduling Appointments'
-        })
-    })    // TODO: check why it is not updating in db  
+            message: 'Error scheduling appointments',
+        });
+    }
 }
+ 
 
-const completedSchedule = (req,res) => {
-    const appointmentId = req.params.appointmentId
-    User.findOneAndUpdate({appointmentId: appointmentId},  
-        {$set:{status: 'completed'}})
-        .then(response => {
-            res.status(200).json({
-                status: true,
-                message: 'Appointment Completed',
-                data: response
-            })
-        }).catch(error => {
-            console.log(error)
-            res.status(500).json({
-                status: false,
-                message: error
-            })
-        })
+const completedSchedule = async (req,res) => {
+    try{
+        const appointmentId = req.params.appointmentId
+        var patientName = req.body.patientName;
+        var doctorName = req.body.doctorName;
+        let appointmentModel = new Appointment({
+            appointmentId: appointmentId,
+            doctorName: doctorName,
+            patientName: patientName,
+            status: 'completed'
+        });
 
+        await Appointment.findOneAndUpdate(
+            { appointmentId: appointmentId },
+            { $set: { status: 'completed' } }
+        );
+
+        await Patient.findOneAndUpdate(
+            { name: patientName },
+            { $pull: {upcomingSchedule: {appointmentId: appointmentId}}, 
+            $push: { completedSchedule: appointmentModel } },
+        );
+
+        await Doctor.findOneAndUpdate(
+            { name: doctorName },
+            { $pull: {upcomingSchedule: {appointmentId: appointmentId}}, 
+            $push: { completedSchedule: appointmentModel } },
+           
+        );
+
+        await User.findOneAndUpdate(
+            { name: patientName },
+            { $pull: {upcomingSchedule: {appointmentId: appointmentId}}, 
+            $push: { completedSchedule: appointmentModel } },
+            
+        );
+
+        await User.findOneAndUpdate(
+            { name: doctorName },
+            { $pull: {upcomingSchedule: {appointmentId: appointmentId}}, 
+            $push: { completedSchedule: appointmentModel } },
+        );
+
+        res.status(200).json({
+            status: true,
+            message: 'Appointment updated successfully.',
+            data: appointmentModel
+        });
+    }catch(error){
+        console.log('Error scheduling appointment:', error);
+        res.status(500).json({
+            status: false,
+            message: 'Error updating appointments',
+        });
+    }
 }
 module.exports = {
    upcomingSchedule, completedSchedule, 
